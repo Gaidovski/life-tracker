@@ -1,3 +1,6 @@
+import os
+from dotenv import load_dotenv
+load_dotenv()
 import logging
 import uuid
 from datetime import datetime, timedelta
