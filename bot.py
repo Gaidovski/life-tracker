@@ -12,6 +12,11 @@ from telegram.ext import (
 import gspread
 from google.oauth2.service_account import Credentials
 
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
+
+TZ = ZoneInfo("Europe/Moscow")
+
 # === КОНФИГ ===
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
@@ -142,10 +147,10 @@ async def choose_date(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     choice = query.data.split("|", 1)[1]
     if choice == "today":
-        context.user_data["dt"] = datetime.now().strftime("%Y-%m-%d")
+        context.user_data["dt"] = datetime.now(TZ).strftime("%Y-%m-%d")
         return await ask_time(query, context)
     elif choice == "yesterday":
-        context.user_data["dt"] = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+        context.user_data["dt"] = (datetime.now(TZ) - timedelta(days=1)).strftime("%Y-%m-%d")
         return await ask_time(query, context)
     elif choice == "custom":
         await query.edit_message_text("Введи дату в формате ДД.ММ.ГГГГ, например 01.03.2026:")
@@ -229,7 +234,7 @@ async def enter_note(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def save_event(update: Update, context: ContextTypes.DEFAULT_TYPE):
     data = {
         "event_id": str(uuid.uuid4()),
-        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "created_at": datetime.now(TZ).strftime("%Y-%m-%d %H:%M:%S"),
         "dt": context.user_data.get("dt", ""),
         "big_category": context.user_data.get("big_category", ""),
         "category": context.user_data.get("category", ""),
