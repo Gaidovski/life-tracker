@@ -10,8 +10,8 @@ import gspread
 from google.oauth2.service_account import Credentials
 
 # === КОНФИГ ===
-TELEGRAM_TOKEN = "8417781549:AAE40p9cQ6csCMC1uvjXZmJfs9EyRr6LMEU"
-SPREADSHEET_ID = "1fRmq_WNiLdpsl8yPlP6CTUSCVf8DN50kJlI1KqjhFS0"
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
 CREDENTIALS_FILE = "/home/ubuntu/life-tracker/google_credentials.json"
 
 # === СТЕЙТЫ ДИАЛОГА ===
