@@ -139,10 +139,10 @@ async def choose_date(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     choice = query.data.split("|", 1)[1]
     if choice == "today":
-        context.user_data["dt"] = datetime.now().strftime("%d.%m.%Y")
+        context.user_data["dt"] = datetime.now().strftime("%Y-%m-%d")
         return await ask_time(query, context)
     elif choice == "yesterday":
-        context.user_data["dt"] = (datetime.now() - timedelta(days=1)).strftime("%d.%m.%Y")
+        context.user_data["dt"] = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
         return await ask_time(query, context)
     elif choice == "custom":
         await query.edit_message_text("Введи дату в формате ДД.ММ.ГГГГ, например 01.03.2026:")
@@ -151,8 +151,8 @@ async def choose_date(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def choose_custom_date(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text.strip()
     try:
-        datetime.strptime(text, "%d.%m.%Y")
-        context.user_data["dt"] = text
+        dt_obj = datetime.strptime(text, "%d.%m.%Y")
+        context.user_data["dt"] = dt_obj.strftime("%Y-%m-%d")
     except ValueError:
         await update.message.reply_text("Неверный формат. Введи дату как ДД.ММ.ГГГГ:")
         return CHOOSE_CUSTOM_DATE
@@ -226,7 +226,7 @@ async def enter_note(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def save_event(update: Update, context: ContextTypes.DEFAULT_TYPE):
     data = {
         "event_id": str(uuid.uuid4()),
-        "created_at": datetime.now().strftime("%d.%m.%Y %H:%M:%S"),
+        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "dt": context.user_data.get("dt", ""),
         "big_category": context.user_data.get("big_category", ""),
         "category": context.user_data.get("category", ""),
